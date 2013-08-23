@@ -26,6 +26,10 @@ response := request.Get()
 //GET http://api.com?user_id=1234
 ```
 
+## Installation
+
+Get telephone with the `go get` command: `go get github.com/benmills/telephone`. You can then import `github.com/benmills/telephone` in your go projects.
+
 ## Todo
 
 * Error handling
