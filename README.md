@@ -1,5 +1,7 @@
 # Telephone
 
+[![Build Status](https://travis-ci.org/benmills/telephone.png)](https://travis-ci.org/benmills/telephone)
+
 Interacting with HTTP services is a fundamental part of many Go applications and libraries. Telephone improves on `net/http` by make it easier to create requests using any method (`GET`, `POST`, `PUT`, ect) and including parameters in the request.
 
 ## Examples
