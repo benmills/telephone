@@ -20,6 +20,10 @@ type Response struct {
 	ParsedBody string
 }
 
+func Get(url string) Response {
+	return Request{url: url}.Get()
+}
+
 func (request Request) Get() Response {
 	return makeRequest("GET", request.buildUrl(), request.body)
 

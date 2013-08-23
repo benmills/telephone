@@ -59,3 +59,12 @@ func TestGetWithParameters(t *testing.T) {
 	response := request.Get()
 	test.Expect(response.ParsedBody).ToEqual("Path:/?foo=bar Method:GET Body:")
 }
+
+func TestGetHelperMethod(t *testing.T) {
+	test := quiz.Test(t)
+	server := echoServer()
+	defer server.Close()
+
+	response := Get(server.URL+"/my_path")
+	test.Expect(response.ParsedBody).ToEqual("Path:/my_path Method:GET Body:")
+}
