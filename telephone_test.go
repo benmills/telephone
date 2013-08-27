@@ -20,44 +20,43 @@ func echoServer() *httptest.Server {
 	return httptest.NewServer(server)
 }
 
+func TestRequestWithBody(t *testing.T) {
+	test := quiz.Test(t)
+	server := echoServer()
+	defer server.Close()
+
+	request := Request{
+		Url: server.URL,
+		Body: "this is a body",
+	}
+
+	response := request.makeRequest("GET")
+	test.Expect(response.ParsedBody).ToEqual("Path:/ Method:GET Body:this is a body")
+}
+
+func TestRequestWithParameters(t *testing.T) {
+	test := quiz.Test(t)
+	server := echoServer()
+	defer server.Close()
+
+	request := Request{
+		Url: server.URL,
+		Parameters: Parameters{
+			"foo": "bar",
+		},
+	}
+
+	response := request.makeRequest("GET")
+	test.Expect(response.ParsedBody).ToEqual("Path:/?foo=bar Method:GET Body:")
+}
+
 func TestGet(t *testing.T) {
 	test := quiz.Test(t)
 	server := echoServer()
 	defer server.Close()
 
-	response := Request{url: server.URL+"/my_path"}.Get()
-	test.Expect(response.ParsedBody).ToEqual("Path:/my_path Method:GET Body:")
-	test.Expect(response.StatusCode).ToEqual(200)
-}
-
-func TestGetWithBody(t *testing.T) {
-	test := quiz.Test(t)
-	server := echoServer()
-	defer server.Close()
-
-	request := Request{
-		url: server.URL,
-		body: "this is a body",
-	}
-
-	response := request.Get()
-	test.Expect(response.ParsedBody).ToEqual("Path:/ Method:GET Body:this is a body")
-}
-
-func TestGetWithParameters(t *testing.T) {
-	test := quiz.Test(t)
-	server := echoServer()
-	defer server.Close()
-
-	request := Request{
-		url: server.URL,
-		parameters: Parameters{
-			"foo": "bar",
-		},
-	}
-
-	response := request.Get()
-	test.Expect(response.ParsedBody).ToEqual("Path:/?foo=bar Method:GET Body:")
+	response := Request{Url: server.URL}.Get()
+	test.Expect(response.ParsedBody).ToEqual("Path:/ Method:GET Body:")
 }
 
 func TestGetHelperMethod(t *testing.T) {
