@@ -18,6 +18,7 @@ type Request struct {
 type Response struct {
 	*http.Response
 	ParsedBody string
+	Success bool
 }
 
 func Get(url string) Response {
@@ -39,10 +40,18 @@ func (request Request) Put() Response {
 func (request Request) makeRequest(method string) Response {
 	httpRequest, _ := http.NewRequest(method, request.buildUrl(), strings.NewReader(request.Body))
 	client := http.Client{}
-	response, _ := client.Do(httpRequest)
-	rawBody, _ := ioutil.ReadAll(response.Body)
 
-	return Response{response, string(rawBody)}
+	response, requestErr := client.Do(httpRequest)
+	if requestErr != nil {
+		return Response{&http.Response{}, "", false}
+	}
+
+	rawBody, ioErr := ioutil.ReadAll(response.Body)
+	if ioErr != nil {
+		return Response{&http.Response{}, "", false}
+	}
+
+	return Response{response, string(rawBody), true}
 }
 
 func (request Request) buildUrl() string {

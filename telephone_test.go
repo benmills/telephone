@@ -20,6 +20,21 @@ func echoServer() *httptest.Server {
 	return httptest.NewServer(server)
 }
 
+func TestRequestFailsDueToInvalidUrl(t *testing.T) {
+	test := quiz.Test(t)
+	response := Request{Url: "!!"}.makeRequest("GET")
+	test.Expect(response.Success).ToBeFalse()
+}
+
+func TestRequestFailsDueToInvalidUrl(t *testing.T) {
+	test := quiz.Test(t)
+	server := echoServer()
+	defer server.Close()
+
+	response := Request{Url: "!!"}.makeRequest("GET")
+	test.Expect(response.Success).ToBeFalse()
+}
+
 func TestRequestWithBody(t *testing.T) {
 	test := quiz.Test(t)
 	server := echoServer()
