@@ -64,6 +64,33 @@ func TestGetHelperMethod(t *testing.T) {
 	server := echoServer()
 	defer server.Close()
 
-	response := Get(server.URL+"/my_path")
-	test.Expect(response.ParsedBody).ToEqual("Path:/my_path Method:GET Body:")
+	response := Get(server.URL)
+	test.Expect(response.ParsedBody).ToEqual("Path:/ Method:GET Body:")
+}
+
+func TestPut(t *testing.T) {
+	test := quiz.Test(t)
+	server := echoServer()
+	defer server.Close()
+
+	response := Request{Url: server.URL}.Put()
+	test.Expect(response.ParsedBody).ToEqual("Path:/ Method:PUT Body:")
+}
+
+func TestPutHelperMethod(t *testing.T) {
+	test := quiz.Test(t)
+	server := echoServer()
+	defer server.Close()
+
+	response := Put(server.URL, "")
+	test.Expect(response.ParsedBody).ToEqual("Path:/ Method:PUT Body:")
+}
+
+func TestPutHelperMethodWithBody(t *testing.T) {
+	test := quiz.Test(t)
+	server := echoServer()
+	defer server.Close()
+
+	response := Put(server.URL, "foo")
+	test.Expect(response.ParsedBody).ToEqual("Path:/ Method:PUT Body:foo")
 }

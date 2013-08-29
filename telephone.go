@@ -24,6 +24,10 @@ func Get(url string) Response {
 	return Request{Url: url}.Get()
 }
 
+func Put(url, body string) Response {
+	return Request{Url: url, Body: body}.Put()
+}
+
 func (request Request) Get() Response {
 	return request.makeRequest("GET")
 }
