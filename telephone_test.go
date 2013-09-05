@@ -1,7 +1,7 @@
 package telephone
 
 import (
-	"github.com/benmills/quiz"
+	e "github.com/lionelbarrow/examples"
 
 	"fmt"
 	"testing"
@@ -20,83 +20,83 @@ func echoServer() *httptest.Server {
 	return httptest.NewServer(server)
 }
 
-func TestRequestFailsDueToInvalidUrl(t *testing.T) {
-	test := quiz.Test(t)
-	response := Request{Url: "!!"}.makeRequest("GET")
-	test.Expect(response.Success).ToBeFalse()
-}
+func TestTelephone(t *testing.T) {
+	e.Describe("Request", t,
+		e.It("fails due to an invalid URL", func (ex *e.Example) {
+			response := Request{Url: "!!"}.makeRequest("GET")
+			ex.Expect(response.Success).ToBeFalse()
+		}),
 
-func TestRequestWithBody(t *testing.T) {
-	test := quiz.Test(t)
-	server := echoServer()
-	defer server.Close()
+		e.It("can have a body", func (ex *e.Example) {
+			server := echoServer()
+			defer server.Close()
 
-	request := Request{
-		Url: server.URL,
-		Body: "this is a body",
-	}
+			request := Request{
+				Url: server.URL,
+				Body: "this is a body",
+			}
 
-	response := request.makeRequest("GET")
-	test.Expect(response.ParsedBody).ToEqual("Path:/ Method:GET Body:this is a body")
-}
+			response := request.makeRequest("GET")
+			ex.Expect(response.ParsedBody).ToEqual("Path:/ Method:GET Body:this is a body")
+		}),
 
-func TestRequestWithParameters(t *testing.T) {
-	test := quiz.Test(t)
-	server := echoServer()
-	defer server.Close()
+		e.It("can have parameters", func (ex *e.Example) {
+			server := echoServer()
+			defer server.Close()
 
-	request := Request{
-		Url: server.URL,
-		Parameters: Parameters{
-			"foo": "bar",
-		},
-	}
+			request := Request{
+				Url: server.URL,
+				Parameters: Parameters{
+					"foo": "bar",
+				},
+			}
 
-	response := request.makeRequest("GET")
-	test.Expect(response.ParsedBody).ToEqual("Path:/?foo=bar Method:GET Body:")
-}
+			response := request.makeRequest("GET")
+			ex.Expect(response.ParsedBody).ToEqual("Path:/?foo=bar Method:GET Body:")
+		}),
 
-func TestGet(t *testing.T) {
-	test := quiz.Test(t)
-	server := echoServer()
-	defer server.Close()
+		e.It("can make a GET request", func (ex *e.Example) {
+			server := echoServer()
+			defer server.Close()
 
-	response := Request{Url: server.URL}.Get()
-	test.Expect(response.ParsedBody).ToEqual("Path:/ Method:GET Body:")
-}
+			response := Request{Url: server.URL}.Get()
+			ex.Expect(response.ParsedBody).ToEqual("Path:/ Method:GET Body:")
+		}),
 
-func TestGetHelperMethod(t *testing.T) {
-	test := quiz.Test(t)
-	server := echoServer()
-	defer server.Close()
+		e.It("can make a PUT request", func (ex *e.Example) {
+			server := echoServer()
+			defer server.Close()
 
-	response := Get(server.URL)
-	test.Expect(response.ParsedBody).ToEqual("Path:/ Method:GET Body:")
-}
+			response := Request{Url: server.URL}.Put()
+			ex.Expect(response.ParsedBody).ToEqual("Path:/ Method:PUT Body:")
+		}),
+	)
 
-func TestPut(t *testing.T) {
-	test := quiz.Test(t)
-	server := echoServer()
-	defer server.Close()
+	e.Describe("Get", t,
+		e.It("can make a GET request", func (ex *e.Example) {
+			server := echoServer()
+			defer server.Close()
 
-	response := Request{Url: server.URL}.Put()
-	test.Expect(response.ParsedBody).ToEqual("Path:/ Method:PUT Body:")
-}
+			response := Get(server.URL)
+			ex.Expect(response.ParsedBody).ToEqual("Path:/ Method:GET Body:")
+		}),
+	)
 
-func TestPutHelperMethod(t *testing.T) {
-	test := quiz.Test(t)
-	server := echoServer()
-	defer server.Close()
+	e.Describe("Put", t,
+		e.It("can make a PUT request", func (ex *e.Example) {
+			server := echoServer()
+			defer server.Close()
 
-	response := Put(server.URL, "")
-	test.Expect(response.ParsedBody).ToEqual("Path:/ Method:PUT Body:")
-}
+			response := Put(server.URL, "")
+			ex.Expect(response.ParsedBody).ToEqual("Path:/ Method:PUT Body:")
+		}),
 
-func TestPutHelperMethodWithBody(t *testing.T) {
-	test := quiz.Test(t)
-	server := echoServer()
-	defer server.Close()
+		e.It("can make a PUT request with a body", func (ex *e.Example) {
+			server := echoServer()
+			defer server.Close()
 
-	response := Put(server.URL, "foo")
-	test.Expect(response.ParsedBody).ToEqual("Path:/ Method:PUT Body:foo")
+			response := Put(server.URL, "my body")
+			ex.Expect(response.ParsedBody).ToEqual("Path:/ Method:PUT Body:my body")
+		}),
+	)
 }
