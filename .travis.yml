@@ -2,5 +2,5 @@ language: go
 go: 1.1
 
 script:
- - go get github.com/benmills/quiz
+ - go get github.com/lionelbarrow/examples
  - go test -v
