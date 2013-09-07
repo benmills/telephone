@@ -70,6 +70,14 @@ func TestTelephone(t *testing.T) {
 			response := Request{Url: server.URL}.Put()
 			ex.Expect(response.ParsedBody).ToEqual("Path:/ Method:PUT Body:")
 		}),
+
+		e.It("can make a POST request", func (ex *e.Example) {
+			server := echoServer()
+			defer server.Close()
+
+			response := Request{Url: server.URL}.Post()
+			ex.Expect(response.ParsedBody).ToEqual("Path:/ Method:POST Body:")
+		}),
 	)
 
 	e.Describe("Get", t,
@@ -97,6 +105,24 @@ func TestTelephone(t *testing.T) {
 
 			response := Put(server.URL, "my body")
 			ex.Expect(response.ParsedBody).ToEqual("Path:/ Method:PUT Body:my body")
+		}),
+	)
+
+	e.Describe("Post", t,
+		e.It("can make a POST request", func (ex *e.Example) {
+			server := echoServer()
+			defer server.Close()
+
+			response := Post(server.URL, "")
+			ex.Expect(response.ParsedBody).ToEqual("Path:/ Method:POST Body:")
+		}),
+
+		e.It("can make a PUT request with a body", func (ex *e.Example) {
+			server := echoServer()
+			defer server.Close()
+
+			response := Post(server.URL, "my body")
+			ex.Expect(response.ParsedBody).ToEqual("Path:/ Method:POST Body:my body")
 		}),
 	)
 }

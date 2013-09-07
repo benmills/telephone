@@ -29,12 +29,20 @@ func Put(url, body string) Response {
 	return Request{Url: url, Body: body}.Put()
 }
 
+func Post(url, body string) Response {
+	return Request{Url: url, Body: body}.Post()
+}
+
 func (request Request) Get() Response {
 	return request.makeRequest("GET")
 }
 
 func (request Request) Put() Response {
 	return request.makeRequest("PUT")
+}
+
+func (request Request) Post() Response {
+	return request.makeRequest("POST")
 }
 
 func (request Request) makeRequest(method string) Response {
